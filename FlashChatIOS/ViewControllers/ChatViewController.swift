@@ -8,11 +8,18 @@ class ChatViewController: UIViewController {
     
     private let viewModel = ChatViewModel()
     
+    private let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.dataSource = self
         messageTextfield.delegate = self
+        tableView.keyboardDismissMode = .interactive
         
         title = K.appName
         navigationItem.hidesBackButton = true
@@ -118,6 +125,7 @@ class ChatViewController: UIViewController {
         viewModel.sendMessage(text: messageTextfield.text ?? "") { [weak self] in
             DispatchQueue.main.async {
                 self?.messageTextfield.text = ""
+                self?.view.endEditing(true)
             }
         }
     }
@@ -133,6 +141,7 @@ extension ChatViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(
             withIdentifier: K.cellIdentifier,
             for: indexPath
@@ -140,33 +149,25 @@ extension ChatViewController: UITableViewDataSource {
         
         let message = viewModel.message(at: indexPath.row)
         
-        cell.label.text = message.body
+        cell.configure(
+            with: message,
+            isCurrentUser: viewModel.isCurrentUserMessage(message),
+            formatter: timeFormatter
+        )
         
-        let date = Date(timeIntervalSince1970: message.date)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        cell.timeLabel.text = formatter.string(from: date)
+        // 🔥 АНИМАЦИЯ
+        cell.alpha = 0
+        cell.transform = CGAffineTransform(translationX: 0, y: 10)
         
-        if viewModel.isCurrentUserMessage(message) {
-            cell.leftImageView.isHidden = true
-            cell.rightImageView.isHidden = false
-            cell.messageBubble.backgroundColor = .systemBlue
-            cell.label.textColor = .white
-            cell.timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
-        } else {
-            cell.leftImageView.isHidden = false
-            cell.rightImageView.isHidden = true
-            cell.messageBubble.backgroundColor = .systemGray5
-            cell.label.textColor = .black
-            cell.timeLabel.textColor = .darkGray
+        UIView.animate(withDuration: 0.25) {
+            cell.alpha = 1
+            cell.transform = .identity
         }
-        
-        cell.messageBubble.layer.cornerRadius = 16
-        cell.messageBubble.clipsToBounds = true
         
         return cell
     }
 }
+
 extension ChatViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let text = textField.text,
