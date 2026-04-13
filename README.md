@@ -31,16 +31,16 @@ Implements real-time messaging with a clean UI inspired by modern messengers.
 ## 📸 Screenshots
 
 ### 🚀 Welcome Screen
-![Welcome](Screenshots/welcome.png)
+![Welcome](Screenshots/Welcome.png)
 
 ### 🔐 Login Screen
-![Login](Screenshots/login.png)
+![Login](Screenshots/Login.png)
 
 ### 📝 Register Screen
-![Register](Screenshots/register.png)
+![Register](Screenshots/Register.png)
 
 ### 💬 Chat Screen
-![Chat](Screenshots/chat.png)
+![Chat](Screenshots/Chat.png)
 
 ---
 
