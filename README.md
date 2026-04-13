@@ -31,16 +31,16 @@ Implements real-time messaging with a clean UI inspired by modern messengers.
 ## 📸 Screenshots
 
 ### 🚀 Welcome Screen
-![Welcome](Screenshots/Welcome.png)
+![Welcome](FlashChatIOS/Screenshots/Welcome.png)
 
 ### 🔐 Login Screen
-![Login](Screenshots/Login.png)
+![Login](FlashChatIOS/Screenshots/Login.png)
 
 ### 📝 Register Screen
-![Register](Screenshots/Register.png)
+![Register](FlashChatIOS/Screenshots/Register.png)
 
 ### 💬 Chat Screen
-![Chat](Screenshots/Chat.png)
+![Chat](FlashChatIOS/Screenshots/Chat.png)
 
 ---
 
