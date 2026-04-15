@@ -1,16 +1,14 @@
 import Foundation
 
 final class ChatViewModel {
-    
-    private let chatService = ChatService()
     private let authService = AuthService()
-    
-    var messages: [Message] = []
-    
+    private let chatService = ChatService()
+    private var messages: [Message] = []
+
     var onMessagesUpdated: (() -> Void)?
-    var onError: ((String) -> Void)?
     var onLogoutSuccess: (() -> Void)?
-    
+    var onError: ((String) -> Void)?
+
     func loadMessages() {
         chatService.loadMessages { [weak self] result in
             switch result {
@@ -22,41 +20,39 @@ final class ChatViewModel {
             }
         }
     }
-    
+
     func sendMessage(text: String, completion: (() -> Void)? = nil) {
         let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedText.isEmpty else { return }
-        
-        let sender = authService.currentUserEmail ?? "test_user"
-        
+
+        let sender = authService.currentUserEmail ?? "unknown_user"
+
         chatService.sendMessage(sender: sender, body: trimmedText) { [weak self] error in
-            if let error = error {
+            if let error {
                 self?.onError?(error.localizedDescription)
             } else {
                 completion?()
             }
         }
     }
-    
+
     func logout() {
-        authService.logout { [weak self] result in
-            switch result {
-            case .success:
-                self?.onLogoutSuccess?()
-            case .failure(let error):
-                self?.onError?(error.localizedDescription)
-            }
+        do {
+            try authService.logout()
+            onLogoutSuccess?()
+        } catch {
+            onError?(error.localizedDescription)
         }
     }
-    
+
     func message(at index: Int) -> Message {
         messages[index]
     }
-    
+
     var messagesCount: Int {
         messages.count
     }
-    
+
     func isCurrentUserMessage(_ message: Message) -> Bool {
         message.sender == authService.currentUserEmail
     }

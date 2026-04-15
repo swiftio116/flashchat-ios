@@ -1,91 +1,112 @@
 import UIKit
 
-class MessageCell: UITableViewCell {
+final class MessageCell: UITableViewCell {
     
     @IBOutlet weak var leftImageView: UIImageView!
     @IBOutlet weak var rightImageView: UIImageView!
     @IBOutlet weak var messageBubble: UIView!
-    @IBOutlet weak var label: UILabel!
+    
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     
-    @IBOutlet weak var leadingConstraint: NSLayoutConstraint?
-    @IBOutlet weak var trailingConstraint: NSLayoutConstraint?
+    @IBOutlet weak var leadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var trailingConstraint: NSLayoutConstraint!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
-        setupInnerConstraints()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         leftImageView.layer.cornerRadius = leftImageView.bounds.height / 2
         rightImageView.layer.cornerRadius = rightImageView.bounds.height / 2
     }
     
+    
     private func setupUI() {
         selectionStyle = .none
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
         
-        messageBubble.layer.cornerRadius = 16
+        messageBubble.layer.cornerRadius = 18
         messageBubble.clipsToBounds = true
         
         leftImageView.clipsToBounds = true
         rightImageView.clipsToBounds = true
         
-        label.numberOfLines = 0
+        nameLabel.font = .systemFont(ofSize: 12, weight: .semibold)
+        nameLabel.textColor = .darkGray
         
-        timeLabel.font = UIFont.systemFont(ofSize: 11)
-        timeLabel.textColor = .darkGray
-    }
-    
-    private func setupInnerConstraints() {
-        label.translatesAutoresizingMaskIntoConstraints = false
-        timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        messageLabel.font = .systemFont(ofSize: 17)
+        messageLabel.numberOfLines = 0
         
-        NSLayoutConstraint.activate([
-            // label
-            label.topAnchor.constraint(equalTo: messageBubble.topAnchor, constant: 8),
-            label.leadingAnchor.constraint(equalTo: messageBubble.leadingAnchor, constant: 12),
-            label.trailingAnchor.constraint(equalTo: messageBubble.trailingAnchor, constant: -12),
-            
-            // timeLabel
-            timeLabel.trailingAnchor.constraint(equalTo: messageBubble.trailingAnchor, constant: -8),
-            timeLabel.bottomAnchor.constraint(equalTo: messageBubble.bottomAnchor, constant: -6),
-            
-            // связь между label и timeLabel
-            label.bottomAnchor.constraint(equalTo: timeLabel.topAnchor, constant: -4)
-        ])
+        timeLabel.font = .systemFont(ofSize: 11)
     }
     
     func configure(with message: Message, isCurrentUser: Bool, formatter: DateFormatter) {
-        label.text = message.body
-        
-        let date = Date(timeIntervalSince1970: message.date)
-        timeLabel.text = formatter.string(from: date)
-        
+        nameLabel.text = message.senderName
+        messageLabel.text = message.body
+        timeLabel.text = formatter.string(from: message.date)
         if isCurrentUser {
             leftImageView.isHidden = true
             rightImageView.isHidden = false
-            
+            nameLabel.isHidden = true
+
             messageBubble.backgroundColor = .systemBlue
-            label.textColor = .white
-            timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
-            
-            leadingConstraint?.constant = 110
-            trailingConstraint?.constant = 44
+            messageLabel.textColor = .white
+            timeLabel.textColor = UIColor.white.withAlphaComponent(0.75)
+
+            leadingConstraint.constant = 80
+            trailingConstraint.constant = 56
+
+            rightImageView.image = avatarImage(letter: firstLetter(from: message.senderName))
         } else {
             leftImageView.isHidden = false
             rightImageView.isHidden = true
-            
+            nameLabel.isHidden = false
+
             messageBubble.backgroundColor = .systemGray5
-            label.textColor = .black
+            messageLabel.textColor = .black
             timeLabel.textColor = .darkGray
-            
-            leadingConstraint?.constant = 44
-            trailingConstraint?.constant = 110
+            nameLabel.textColor = .darkGray
+
+            leadingConstraint.constant = 56
+            trailingConstraint.constant = 80
+
+            leftImageView.image = avatarImage(letter: firstLetter(from: message.senderName))
         }
-        
         layoutIfNeeded()
+    }
+    
+    private func firstLetter(from name: String) -> String {
+        String(name.trimmingCharacters(in: .whitespacesAndNewlines).prefix(1)).uppercased()
+    }
+    
+    private func avatarImage(letter: String) -> UIImage? {
+        let size = CGSize(width: 40, height: 40)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        
+        return renderer.image { _ in
+            let rect = CGRect(origin: .zero, size: size)
+            UIColor.systemBlue.withAlphaComponent(0.15).setFill()
+            UIBezierPath(ovalIn: rect).fill()
+            
+            let attrs: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 18, weight: .semibold),
+                .foregroundColor: UIColor.systemBlue
+            ]
+            
+            let textSize = letter.size(withAttributes: attrs)
+            let textRect = CGRect(
+                x: (size.width - textSize.width) / 2,
+                y: (size.height - textSize.height) / 2,
+                width: textSize.width,
+                height: textSize.height
+            )
+            
+            letter.draw(in: textRect, withAttributes: attrs)
+        }
     }
 }

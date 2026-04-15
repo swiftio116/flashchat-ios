@@ -1,9 +1,9 @@
 import UIKit
 
-class LoginViewController: UIViewController {
+final class LoginViewController: UIViewController {
     
-    @IBOutlet weak var emailTextfield: UITextField!
-    @IBOutlet weak var passwordTextfield: UITextField!
+    @IBOutlet weak var emailTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
     
     private let viewModel = LoginViewModel()
     
@@ -12,30 +12,26 @@ class LoginViewController: UIViewController {
         bindViewModel()
     }
     
+    @IBAction func loginPressed(_ sender: UIButton) {
+        viewModel.login(
+            email: emailTextField.text,
+            password: passwordTextField.text
+        )
+    }
+    
     private func bindViewModel() {
         viewModel.onSuccess = { [weak self] in
-            DispatchQueue.main.async {
-                self?.performSegue(withIdentifier: K.loginSegue, sender: self)
-            }
+            self?.performSegue(withIdentifier: K.loginSegue, sender: self)
         }
         
         viewModel.onError = { [weak self] errorMessage in
-            DispatchQueue.main.async {
-                let alert = UIAlertController(
-                    title: "Ошибка",
-                    message: errorMessage,
-                    preferredStyle: .alert
-                )
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
-                self?.present(alert, animated: true)
-            }
+            let alert = UIAlertController(
+                title: "Ошибка",
+                message: errorMessage,
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self?.present(alert, animated: true)
         }
-    }
-    
-    @IBAction func loginPressed(_ sender: UIButton) {
-        viewModel.login(
-            email: emailTextfield.text,
-            password: passwordTextfield.text
-        )
     }
 }
