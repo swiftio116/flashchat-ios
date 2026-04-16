@@ -21,7 +21,7 @@ class RegisterViewController: UIViewController {
 
         nameTextField.attributedPlaceholder = NSAttributedString(
             string: "Name",
-            attributes: [.foregroundColor: UIColor.gray]
+            attributes: [.foregroundColor: UIColor.black.withAlphaComponent(0.5)]
         )
 
         emailTextField.attributedPlaceholder = NSAttributedString(

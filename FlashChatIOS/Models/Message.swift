@@ -1,5 +1,4 @@
 import Foundation
-import FirebaseFirestore
 
 struct Message {
     let sender: String

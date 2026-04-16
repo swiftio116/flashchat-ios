@@ -9,7 +9,9 @@ final class AuthService {
     var currentUserEmail: String? {
         auth.currentUser?.email
     }
-
+    var currentUserName: String? {
+        Auth.auth().currentUser?.displayName
+    }
     var currentUserID: String? {
         auth.currentUser?.uid
     }
