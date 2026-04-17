@@ -37,7 +37,7 @@ final class AuthService {
                 let error = NSError(
                     domain: "AuthService",
                     code: -1,
-                    userInfo: [NSLocalizedDescriptionKey: "Не удалось создать пользователя"]
+                    userInfo: [NSLocalizedDescriptionKey: "Failed to create user"]
                 )
                 completion(.failure(error))
                 return
@@ -61,6 +61,24 @@ final class AuthService {
         }
     }
 
+    func fetchCurrentUserName(completion: @escaping (String?) -> Void) {
+        guard let uid = auth.currentUser?.uid else {
+            completion(nil)
+            return
+        }
+
+        db.collection("users").document(uid).getDocument { snapshot, error in
+            if let error = error {
+                print("fetchCurrentUserName error:", error.localizedDescription)
+                completion(nil)
+                return
+            }
+
+            let name = snapshot?.data()?["name"] as? String
+            let cleanName = name?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            completion(cleanName)
+        }
+    }
     func login(
         email: String,
         password: String,

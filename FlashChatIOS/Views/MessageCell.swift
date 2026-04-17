@@ -56,7 +56,7 @@ final class MessageCell: UITableViewCell {
 
             messageBubble.backgroundColor = .systemBlue
             messageLabel.textColor = .white
-            timeLabel.textColor = UIColor.white.withAlphaComponent(0.75)
+            timeLabel.textColor = UIColor .black.withAlphaComponent(0.75)
 
             leadingConstraint.constant = 80
             trailingConstraint.constant = 56

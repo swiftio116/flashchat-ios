@@ -26,7 +26,7 @@ final class LoginViewController: UIViewController {
         
         viewModel.onError = { [weak self] errorMessage in
             let alert = UIAlertController(
-                title: "Ошибка",
+                title: "Error",
                 message: errorMessage,
                 preferredStyle: .alert
             )

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,20 +21,20 @@
                     <view contentMode="scaleToFill" semanticContentAttribute="spatial" preservesSuperviewLayoutMargins="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YNY-xK-mJo">
                         <rect key="frame" x="52" y="8" width="260" height="64"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0Y-eK-Rvk">
-                                <rect key="frame" x="12" y="8.0000000000000018" width="260" height="23.666666666666671"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0Y-eK-Rvk">
+                                <rect key="frame" x="12" y="7.9999999999999982" width="260" height="20.333333333333329"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rPN-lN-Rmk">
-                                <rect key="frame" x="12" y="31.333333333333336" width="260" height="20.333333333333336"/>
+                                <rect key="frame" x="12" y="28" width="260" height="20.333333333333329"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="12:45" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCh-Vx-Tu6">
-                                <rect key="frame" x="225" y="55.666666666666664" width="43" height="20.333333333333336"/>
+                                <rect key="frame" x="209" y="52.333333333333336" width="43" height="5.6666666666666643"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -42,13 +42,13 @@
                         </subviews>
                         <color key="backgroundColor" name="AccentColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="eCh-Vx-Tu6" secondAttribute="bottom" constant="-12" id="7lY-Qm-JtU"/>
                             <constraint firstItem="rPN-lN-Rmk" firstAttribute="bottom" secondItem="v0Y-eK-Rvk" secondAttribute="bottom" constant="20" id="ApU-wf-zAD"/>
                             <constraint firstAttribute="trailing" secondItem="rPN-lN-Rmk" secondAttribute="trailing" constant="-12" id="Nnz-Uu-s9O"/>
                             <constraint firstAttribute="trailing" secondItem="v0Y-eK-Rvk" secondAttribute="trailing" constant="-12" id="RHR-67-TRt"/>
                             <constraint firstItem="v0Y-eK-Rvk" firstAttribute="top" secondItem="YNY-xK-mJo" secondAttribute="top" constant="8" id="Wol-JB-RVM"/>
+                            <constraint firstAttribute="bottom" secondItem="eCh-Vx-Tu6" secondAttribute="bottom" constant="6" id="dXn-Jt-I3g"/>
                             <constraint firstItem="v0Y-eK-Rvk" firstAttribute="leading" secondItem="YNY-xK-mJo" secondAttribute="leading" constant="12" id="iyA-1M-yRZ"/>
-                            <constraint firstAttribute="trailing" secondItem="eCh-Vx-Tu6" secondAttribute="trailing" constant="-8" id="oTx-tH-75c"/>
+                            <constraint firstAttribute="trailing" secondItem="eCh-Vx-Tu6" secondAttribute="trailing" constant="8" id="kJN-tq-qmr"/>
                             <constraint firstItem="rPN-lN-Rmk" firstAttribute="leading" secondItem="YNY-xK-mJo" secondAttribute="leading" constant="12" id="sEG-dn-CpL"/>
                             <constraint firstItem="eCh-Vx-Tu6" firstAttribute="top" secondItem="rPN-lN-Rmk" secondAttribute="bottom" constant="4" id="vMb-XU-z4Y"/>
                         </constraints>

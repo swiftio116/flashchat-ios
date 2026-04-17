@@ -9,19 +9,19 @@ final class RegisterViewModel {
     func register(name: String?, email: String?, password: String?) {
         guard let name = name?.trimmingCharacters(in: .whitespacesAndNewlines),
               !name.isEmpty else {
-            onError?("Введите имя")
+            onError?("Enter name")
             return
         }
 
         guard let email = email?.trimmingCharacters(in: .whitespacesAndNewlines),
               !email.isEmpty else {
-            onError?("Введите email")
+            onError?("Enter email")
             return
         }
 
         guard let password = password,
               !password.isEmpty else {
-            onError?("Введите пароль")
+            onError?("Enter password")
             return
         }
 

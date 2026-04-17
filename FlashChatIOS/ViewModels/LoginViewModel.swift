@@ -11,7 +11,7 @@ final class LoginViewModel {
               !email.isEmpty,
               let password = password,
               !password.isEmpty else {
-            onError?("Введите email и пароль")
+            onError?("Enter your email and password")
             return
         }
 

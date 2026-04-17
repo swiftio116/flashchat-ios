@@ -59,7 +59,7 @@ class RegisterViewController: UIViewController {
         viewModel.onError = { [weak self] errorMessage in
             DispatchQueue.main.async {
                 let alert = UIAlertController(
-                    title: "Ошибка",
+                    title: "Error",
                     message: errorMessage,
                     preferredStyle: .alert
                 )
