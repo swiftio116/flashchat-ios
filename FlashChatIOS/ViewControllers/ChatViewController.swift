@@ -15,6 +15,10 @@ final class ChatViewController: UIViewController {
         return formatter
     }()
     
+    @IBAction func attachPressed(_ sender: UIButton) {
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
