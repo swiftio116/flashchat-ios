@@ -1,13 +1,17 @@
 import UIKit
+import PhotosUI
+import UniformTypeIdentifiers
+import CoreLocation
 
-final class ChatViewController: UIViewController {
+final class ChatViewController: UIViewController, PHPickerViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentPickerDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var messageTextfield: UITextField!
-    
+    @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var attachButton: UIButton!
+    
     private let viewModel = ChatViewModel()
+    private let locationManager = CLLocationManager()
     
     private let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -15,17 +19,16 @@ final class ChatViewController: UIViewController {
         return formatter
     }()
     
-    @IBAction func attachPressed(_ sender: UIButton) {
-    }
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.dataSource = self
         tableView.delegate = self
-        messageTextfield.delegate = self
         tableView.keyboardDismissMode = .interactive
+        messageTextField.delegate = self
+        
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         
         title = K.appName
         navigationItem.hidesBackButton = true
@@ -45,6 +48,18 @@ final class ChatViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
         viewModel.stopListening()
+    }
+    
+    @IBAction func attachPressed(_ sender: UIButton) {
+        showAttachmentMenu()
+    }
+    
+    @IBAction func sendPressed(_ sender: UIButton) {
+        sendCurrentMessage()
+    }
+    
+    @IBAction func logOutPressed(_ sender: UIBarButtonItem) {
+        viewModel.logout()
     }
     
     private func bindViewModel() {
@@ -126,21 +141,13 @@ final class ChatViewController: UIViewController {
         }
     }
     
-    @IBAction func sendPressed(_ sender: UIButton) {
-        sendCurrentMessage()
-    }
-    
-    @IBAction func logOutPressed(_ sender: UIBarButtonItem) {
-        viewModel.logout()
-    }
-    
     private func sendCurrentMessage() {
-        let text = messageTextfield.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let text = messageTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard !text.isEmpty else { return }
         
         viewModel.sendMessage(text: text) { [weak self] in
             DispatchQueue.main.async {
-                self?.messageTextfield.text = ""
+                self?.messageTextField.text = ""
                 self?.scrollToBottom(animated: true)
             }
         }
@@ -163,8 +170,112 @@ final class ChatViewController: UIViewController {
             self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
         }
     }
+    
+    private func showAttachmentMenu() {
+        let alert = UIAlertController(
+            title: "Send Attachment",
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        
+        alert.addAction(UIAlertAction(title: "📷 Camera", style: .default) { [weak self] _ in
+            self?.openCamera()
+        })
+        
+        alert.addAction(UIAlertAction(title: "🖼 Gallery", style: .default) { [weak self] _ in
+            self?.openGallery()
+        })
+        
+        alert.addAction(UIAlertAction(title: "📄 File", style: .default) { [weak self] _ in
+            self?.openFilePicker()
+        })
+        
+        alert.addAction(UIAlertAction(title: "📍 Location", style: .default) { [weak self] _ in
+            self?.sendLocation()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        if let popover = alert.popoverPresentationController {
+            popover.sourceView = attachButton
+            popover.sourceRect = attachButton.bounds
+        }
+        
+        present(alert, animated: true)
+    }
+    
+    private func openCamera() {
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            showSimpleAlert(title: "Camera Unavailable", message: "This device does not have a camera.")
+            return
+        }
+        
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.delegate = self
+        picker.allowsEditing = false
+        present(picker, animated: true)
+    }
+    
+    private func openGallery() {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .images
+        configuration.selectionLimit = 1
+        
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    private func openFilePicker() {
+        let picker = UIDocumentPickerViewController(
+            forOpeningContentTypes: [
+                .pdf,
+                .text,
+                .plainText,
+                .image,
+                .data,
+                .content
+            ],
+            asCopy: true
+        )
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    private func sendLocation() {
+        let status = locationManager.authorizationStatus
+        
+        switch status {
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+            
+        case .authorizedWhenInUse, .authorizedAlways:
+            locationManager.requestLocation()
+            
+        case .denied, .restricted:
+            showSimpleAlert(
+                title: "Location Access Denied",
+                message: "Please allow location access in Settings."
+            )
+            
+        @unknown default:
+            break
+        }
+    }
+    
+    private func showSimpleAlert(title: String, message: String) {
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.messagesCount
@@ -196,9 +307,99 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+// MARK: - UITextFieldDelegate
 extension ChatViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         sendCurrentMessage()
         return false
+    }
+}
+
+// MARK: - PHPickerViewControllerDelegate
+extension ChatViewController {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        guard let result = results.first else { return }
+        
+        result.itemProvider.loadObject(ofClass: UIImage.self) { object, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.showSimpleAlert(title: "Gallery Error", message: error.localizedDescription)
+                }
+                return
+            }
+            
+            guard let image = object as? UIImage else { return }
+            
+            DispatchQueue.main.async {
+                print("Selected gallery image: \(image)")
+                // Upload image to Firebase Storage later
+            }
+        }
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
+extension ChatViewController {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true)
+        
+        guard let image = info[.originalImage] as? UIImage else { return }
+        
+        DispatchQueue.main.async {
+            print("Captured image: \(image)")
+            // Upload image to Firebase Storage later
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
+}
+
+// MARK: - UIDocumentPickerDelegate
+extension ChatViewController {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let url = urls.first else { return }
+        
+        DispatchQueue.main.async {
+            print("Selected file: \(url.lastPathComponent)")
+            // Upload file to Firebase Storage later
+        }
+    }
+    
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        controller.dismiss(animated: true)
+    }
+}
+
+// MARK: - CLLocationManagerDelegate
+extension ChatViewController {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let status = manager.authorizationStatus
+        
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
+            manager.requestLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.first else { return }
+        
+        let latitude = location.coordinate.latitude
+        let longitude = location.coordinate.longitude
+        
+        let locationText = "📍 Location: \(latitude), \(longitude)"
+        
+        viewModel.sendMessage(text: locationText) { [weak self] in
+            DispatchQueue.main.async {
+                self?.scrollToBottom(animated: true)
+            }
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        showSimpleAlert(title: "Location Error", message: error.localizedDescription)
     }
 }
