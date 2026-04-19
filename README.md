@@ -8,8 +8,7 @@ The project demonstrates clean architecture, real-time data synchronization, and
 
 📱 Demo
 
-![FlashChat Demo](FlashChatIOS/Screenshots/flashchat-demo.gif)
-
+Screenshots/flashchat-demo.gif
 
 ✨ Features
 
