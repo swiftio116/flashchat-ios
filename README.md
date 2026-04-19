@@ -8,9 +8,9 @@ The project demonstrates clean architecture, real-time data synchronization, and
 
 📱 Demo
 
-![FlashChat Demo](https://raw.githubusercontent.com/swiftio116/flashchat-ios/main/FlashChatIOS/Screenshots/flashchat-demo.gif)
-✨ Features
+![FlashChat Demo](Screenshots/flashchat-demo.gif)
 
+✨ Features
 * 🔐 Authentication (Login / Register via Firebase Auth)
 * 💬 Real-time messaging (Firestore listener)
 * 🧠 MVVM architecture
