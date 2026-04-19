@@ -1,39 +1,64 @@
-🚀 FlashChat iOS
+# 🚀 FlashChat iOS
 
-A production-style real-time chat application built with Swift, UIKit, and Firebase.
+A production-style real-time chat application built with **Swift, UIKit, and Firebase**.
 
 The project demonstrates clean architecture, real-time data synchronization, and UX patterns inspired by modern messaging apps like Telegram.
 
-⸻
+---
 
-📱 Demo
+## 📱 Demo
 
 ![FlashChat Demo](Screenshots/flashchat-demo.gif)
 
-✨ Features
-* 🔐 Authentication (Login / Register via Firebase Auth)
-* 💬 Real-time messaging (Firestore listener)
-* 🧠 MVVM architecture
-* 🖼 Custom message cells (incoming / outgoing)
-* 👤 Avatar generation based on username initials
-* 🕒 Message timestamps
-* 📜 Auto-scroll to latest message
-* ⌨️ Smooth keyboard handling (constraint-based)
-* 📎 Attachment menu:
-    * Camera
-    * Photo Library
-    * Files
-    * Location (UI ready)
-* 🚪 Logout
+> Real-time messaging, attachments, and smooth UI interactions
 
-⸻
+---
 
-🧱 Architecture
+## ✨ Features
 
-The project follows MVVM (Model-View-ViewModel):
+- 🔐 Authentication (Login / Register via Firebase Auth)
+- 💬 Real-time messaging (Firestore listener)
+- 🧠 MVVM architecture
+- 🖼 Custom message cells (incoming / outgoing)
+- 👤 Avatar generation based on username initials
+- 🕒 Message timestamps
+- 📜 Auto-scroll to latest message
+- ⌨️ Smooth keyboard handling (constraint-based)
+
+### 📎 Attachments
+- 📷 Camera
+- 🖼 Photo Library
+- 📄 Files
+- 📍 Location (UI ready)
+
+---
+
+## 📸 Screenshots
+
+### 🚀 Welcome Screen
+![Welcome](Screenshots/Welcome.png)
+
+### 🔐 Login Screen
+![Login](Screenshots/Login.png)
+
+### 📝 Register Screen
+![Register](Screenshots/Register.png)
+
+### 💬 Chat Screen
+![Chat](Screenshots/Chat.png)
+
+### 📎 Attachment Menu
+![Attachment Menu](Screenshots/attachment-menu.png)
+
+---
+
+## 🧱 Architecture
+
+The project follows **MVVM (Model-View-ViewModel)**:
+
 ViewController → ViewModel → Services → Firebase
-
 Architecture Diagram
+```
 ┌───────────────┐
 │ ViewController│
 └───────┬───────┘
@@ -51,7 +76,7 @@ Architecture Diagram
 │   Firebase    │
 │ Auth + DB     │
 └───────────────┘
-
+```
 Why MVVM?
 
 * Separates UI from business logic
@@ -62,7 +87,7 @@ Why MVVM?
 ⸻
 
 🔄 App Flow
-
+```
 Login / Register
         ↓
    Authentication
@@ -70,6 +95,8 @@ Login / Register
    Chat Screen
         ↓
 Send / Receive Messages (Realtime)
+```
+⸻
 
 ⚙️ Technical Highlights
 
@@ -81,32 +108,11 @@ Send / Receive Messages (Realtime)
 * Keyboard-aware layout using constraints
 * Custom avatar generation without backend images
 
-📸 Screenshots
-Chat UI
-### 🚀 Welcome Screen
-
-![Welcome](FlashChatIOS/Screenshots/Welcome.png)
-
-### 🔐 Login Screen
-
-![Login](FlashChatIOS/Screenshots/Login.png)
-
-### 📝 Register Screen
-
-![Register](FlashChatIOS/Screenshots/Register.png)
-
-### 💬 Chat Screen
-
-![Chat](FlashChatIOS/Screenshots/Chat.png)
-
-### 📎 Attachment Menu
-
-![Attachment Menu](FlashChatIOS/Screenshots/attachment-menu.png)
 ⸻
 
 🧪 Challenges & Solutions
 
-1. Real-time UI synchronization
+Real-time UI synchronization
 
 Challenge: Avoid UI glitches during updates
 Solution:
@@ -116,7 +122,7 @@ Solution:
 
 ⸻
 
-2. Auto-scroll stability
+Auto-scroll stability
 
 Challenge: Crashes when scrolling after reload
 Solution:
@@ -126,7 +132,7 @@ Solution:
 
 ⸻
 
-3. Keyboard handling
+Keyboard handling
 
 Challenge: Keyboard overlapping input field
 Solution:
@@ -136,7 +142,7 @@ Solution:
 
 ⸻
 
-4. Missing user avatars
+Avatar generation
 
 Challenge: No stored profile images
 Solution:
@@ -145,24 +151,17 @@ Solution:
 
 ⸻
 
-📈 Project Evolution
-v1.0 → Basic chat (MVC)
-v1.1 → Refactored to MVVM
-v1.2 → Firebase integration
-v1.3 → UI/UX improvements
-v1.4 → Attachment menu
-
-⸻
-
 📌 Current Status
 
 ✅ MVP Completed
 
-The application supports:
+Implemented:
 
-* authentication
-* real-time messaging
-* production-like UI
+* Firebase Auth (Login / Register)
+* Firestore real-time messaging
+* Chat UI with custom cells
+* Attachment menu (UI)
+* Keyboard handling + auto-scroll
 
 ⸻
 
@@ -182,7 +181,7 @@ The application supports:
 * UIKit
 * Firebase Auth
 * Firebase Firestore
-* MVVM
+* MVVM Architecture
 * Auto Layout
 * UITableView
 
@@ -203,13 +202,14 @@ Run 🚀
 
 ⸻
 
-🎯 What I Learned
+🎯 My Contribution
 
-* Designing scalable architecture (MVVM)
-* Working with real-time data (Firestore)
-* Handling async operations safely
-* Building responsive UI (keyboard + layout)
-* Structuring production-like iOS projects
+* Designed chat UI and message cell layout
+* Refactored project to MVVM architecture
+* Implemented Firestore real-time listener
+* Built keyboard-aware input system
+* Added attachment menu (camera, gallery, files, location)
+* Implemented auto-scroll and smooth UX behavior
 
 ⸻
 
