@@ -12,8 +12,19 @@
 		9B060F032F7D88AA00B608D8 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 9B060F022F7D88AA00B608D8 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9B44FFC12FDF0A41006E190C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9B790C6A2F7AA72600B163C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9B790C712F7AA72600B163C0;
+			remoteInfo = "Flash Chat IOS";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		9B196C462F85824600EB16B0 /* Flash Chat IOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Flash Chat IOS.entitlements"; sourceTree = "<group>"; };
+		9B44FFBD2FDF0A41006E190C /* FlashChatIOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlashChatIOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B790C722F7AA72600B163C0 /* Flash Chat IOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Flash Chat IOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -28,6 +39,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		9B44FFBE2FDF0A41006E190C /* FlashChatIOSTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FlashChatIOSTests;
+			sourceTree = "<group>";
+		};
 		9B790C742F7AA72600B163C0 /* FlashChatIOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -39,6 +55,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9B44FFBA2FDF0A41006E190C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9B790C6F2F7AA72600B163C0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -64,6 +87,7 @@
 			children = (
 				9B196C462F85824600EB16B0 /* Flash Chat IOS.entitlements */,
 				9B790C742F7AA72600B163C0 /* FlashChatIOS */,
+				9B44FFBE2FDF0A41006E190C /* FlashChatIOSTests */,
 				9B790C732F7AA72600B163C0 /* Products */,
 				2747F9B9FAF19A118B2B7E71 /* Pods */,
 			);
@@ -73,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				9B790C722F7AA72600B163C0 /* Flash Chat IOS.app */,
+				9B44FFBD2FDF0A41006E190C /* FlashChatIOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -80,6 +105,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9B44FFBC2FDF0A41006E190C /* FlashChatIOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9B44FFC32FDF0A41006E190C /* Build configuration list for PBXNativeTarget "FlashChatIOSTests" */;
+			buildPhases = (
+				9B44FFB92FDF0A41006E190C /* Sources */,
+				9B44FFBA2FDF0A41006E190C /* Frameworks */,
+				9B44FFBB2FDF0A41006E190C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9B44FFC22FDF0A41006E190C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				9B44FFBE2FDF0A41006E190C /* FlashChatIOSTests */,
+			);
+			name = FlashChatIOSTests;
+			packageProductDependencies = (
+			);
+			productName = FlashChatIOSTests;
+			productReference = 9B44FFBD2FDF0A41006E190C /* FlashChatIOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		9B790C712F7AA72600B163C0 /* Flash Chat IOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9B790C852F7AA72700B163C0 /* Build configuration list for PBXNativeTarget "Flash Chat IOS" */;
@@ -107,9 +155,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2650;
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
+					9B44FFBC2FDF0A41006E190C = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = 9B790C712F7AA72600B163C0;
+					};
 					9B790C712F7AA72600B163C0 = {
 						CreatedOnToolsVersion = 26.3;
 					};
@@ -133,11 +185,19 @@
 			projectRoot = "";
 			targets = (
 				9B790C712F7AA72600B163C0 /* Flash Chat IOS */,
+				9B44FFBC2FDF0A41006E190C /* FlashChatIOSTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9B44FFBB2FDF0A41006E190C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9B790C702F7AA72600B163C0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -148,6 +208,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9B44FFB92FDF0A41006E190C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9B790C6E2F7AA72600B163C0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -157,7 +224,59 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		9B44FFC22FDF0A41006E190C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9B790C712F7AA72600B163C0 /* Flash Chat IOS */;
+			targetProxy = 9B44FFC12FDF0A41006E190C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		9B44FFC42FDF0A41006E190C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 59TZK82885;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.muzafarov.FlashChatIOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Flash Chat IOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Flash Chat IOS";
+			};
+			name = Debug;
+		};
+		9B44FFC52FDF0A41006E190C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 59TZK82885;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.muzafarov.FlashChatIOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Flash Chat IOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Flash Chat IOS";
+			};
+			name = Release;
+		};
 		9B790C862F7AA72700B163C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -356,6 +475,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9B44FFC32FDF0A41006E190C /* Build configuration list for PBXNativeTarget "FlashChatIOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9B44FFC42FDF0A41006E190C /* Debug */,
+				9B44FFC52FDF0A41006E190C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9B790C6D2F7AA72600B163C0 /* Build configuration list for PBXProject "FlashChatIOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
