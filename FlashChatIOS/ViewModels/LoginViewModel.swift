@@ -1,10 +1,14 @@
 import Foundation
 
 final class LoginViewModel {
-    private let authService = AuthService()
+    private let authService: AuthServicing
 
     var onSuccess: (() -> Void)?
     var onError: ((String) -> Void)?
+
+    init(authService: AuthServicing = AuthService()) {
+        self.authService = authService
+    }
 
     func login(email: String?, password: String?) {
         guard let email = email?.trimmingCharacters(in: .whitespacesAndNewlines),

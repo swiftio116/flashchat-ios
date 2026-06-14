@@ -1,10 +1,14 @@
 import Foundation
 
 final class RegisterViewModel {
-    private let authService = AuthService()
+    private let authService: AuthServicing
 
     var onSuccess: (() -> Void)?
     var onError: ((String) -> Void)?
+
+    init(authService: AuthServicing = AuthService()) {
+        self.authService = authService
+    }
 
     func register(name: String?, email: String?, password: String?) {
         guard let name = name?.trimmingCharacters(in: .whitespacesAndNewlines),

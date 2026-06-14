@@ -99,3 +99,4 @@ final class AuthService {
         try auth.signOut()
     }
 }
+extension AuthService: AuthServicing {}

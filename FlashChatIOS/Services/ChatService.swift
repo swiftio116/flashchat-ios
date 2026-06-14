@@ -78,3 +78,4 @@ final class ChatService {
         }
     }
 }
+extension ChatService: ChatServicing {}

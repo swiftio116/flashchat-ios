@@ -1,8 +1,16 @@
 import Foundation
 
 final class ChatViewModel {
-    private let authService = AuthService()
-    private let chatService = ChatService()
+    private let authService: AuthServicing
+    private let chatService: ChatServicing
+
+    init(
+        authService: AuthServicing = AuthService(),
+        chatService: ChatServicing = ChatService()
+    ) {
+        self.authService = authService
+        self.chatService = chatService
+    }
     private var messages: [Message] = []
 
     var onMessagesUpdated: (() -> Void)?
