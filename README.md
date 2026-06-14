@@ -1,8 +1,8 @@
 # 🚀 FlashChat iOS
 
-A production-style real-time chat application built with **Swift, UIKit, and Firebase**.
+A production-style real-time chat application built with **Swift**, **UIKit**, **Firebase**, **MVVM architecture**, and **Dependency Injection**.
 
-The project demonstrates clean architecture, real-time data synchronization, and UX patterns inspired by modern messaging apps like Telegram.
+The project demonstrates real-time messaging, Firebase Authentication, Cloud Firestore integration, protocol-based service abstraction, testable ViewModels, and unit testing with mock services.
 
 ---
 
@@ -10,55 +10,126 @@ The project demonstrates clean architecture, real-time data synchronization, and
 
 ![FlashChat Demo](Screenshots/flashchat-demo.gif)
 
-> Real-time messaging, attachments, and smooth UI interactions
+> Real-time messaging, attachments, and smooth UI interactions.
 
 ---
 
 ## ✨ Features
 
-- 🔐 Authentication (Login / Register via Firebase Auth)
-- 💬 Real-time messaging (Firestore listener)
+- 🔐 Authentication: login and registration via Firebase Auth
+- 💬 Real-time messaging with Cloud Firestore listener
 - 🧠 MVVM architecture
-- 🖼 Custom message cells (incoming / outgoing)
+- 🔌 Dependency Injection using protocols
+- 🧪 Unit testing with mock services
+- 🖼 Custom message cells for incoming and outgoing messages
 - 👤 Avatar generation based on username initials
 - 🕒 Message timestamps
-- 📜 Auto-scroll to latest message
-- ⌨️ Smooth keyboard handling (constraint-based)
+- 📜 Auto-scroll to the latest message
+- ⌨️ Smooth keyboard handling with constraints
+- 📱 UIKit-based responsive interface
 
 ### 📎 Attachments
+
 - 📷 Camera
 - 🖼 Photo Library
 - 📄 Files
-- 📍 Location (UI ready)
+- 📍 Location UI
 
 ---
 
 ## 📸 Screenshots
 
 ### 🚀 Welcome Screen
+
 ![Welcome](Screenshots/Welcome.png)
 
 ### 🔐 Login Screen
+
 ![Login](Screenshots/Login.png)
 
 ### 📝 Register Screen
+
 ![Register](Screenshots/Register.png)
 
 ### 💬 Chat Screen
+
 ![Chat](Screenshots/Chat.png)
 
 ### 📎 Attachment Menu
+
 ![Attachment Menu](Screenshots/attachment-menu.png)
+
+---
+
+## 🛠 Tech Stack
+
+- Swift
+- UIKit
+- Firebase Authentication
+- Cloud Firestore
+- Swift Package Manager
+- MVVM Architecture
+- Dependency Injection
+- Swift Testing
+- Auto Layout
+- UITableView
+- Git & GitHub
+
+---
+
+## 🧪 Testing
+
+The project includes **10 unit tests** for ViewModels and business logic.
+
+### LoginViewModel Tests
+
+- Empty email validation
+- Empty password validation
+- Successful login flow
+
+### RegisterViewModel Tests
+
+- Empty name validation
+- Empty email validation
+- Empty password validation
+
+### ChatViewModel Tests
+
+- Message listener updates message count
+- Current user message detection
+- Other user message detection
+- Empty message validation
+
+### Mock Services
+
+The test suite uses:
+
+- `MockAuthService`
+- `MockChatService`
+
+This allows ViewModels to be tested independently from Firebase and network dependencies.
 
 ---
 
 ## 🧱 Architecture
 
-The project follows **MVVM (Model-View-ViewModel)**:
+The project follows **MVVM (Model-View-ViewModel)**.
 
-ViewController → ViewModel → Services → Firebase
-Architecture Diagram
+### Architecture Flow
+
+```text
+ViewController
+      ↓
+ViewModel
+      ↓
+Services
+      ↓
+Firebase
 ```
+
+### Architecture Diagram
+
+```text
 ┌───────────────┐
 │ ViewController│
 └───────┬───────┘
@@ -77,145 +148,262 @@ Architecture Diagram
 │ Auth + DB     │
 └───────────────┘
 ```
-Why MVVM?
 
-* Separates UI from business logic
-* Improves testability
-* Makes the code scalable
-* Reduces ViewController complexity
+### Why MVVM?
 
-⸻
+- Separates UI from business logic
+- Improves testability
+- Makes the code scalable
+- Reduces ViewController complexity
 
-🔄 App Flow
-```
+### ViewControllers
+
+Responsible for:
+
+- UI rendering
+- User interactions
+- Navigation
+- Binding with ViewModels
+
+### ViewModels
+
+Responsible for:
+
+- Input validation
+- Presentation logic
+- Authentication flow
+- Chat logic
+- Communication with services
+
+### Models
+
+Responsible for representing app data structures, such as chat messages.
+
+### Services
+
+Responsible for Firebase communication:
+
+- Authentication
+- Firestore message loading
+- Firestore message sending
+- User profile fetching
+
+---
+
+## 🔌 Dependency Injection
+
+Services are injected into ViewModels through protocols.
+
+### Protocols
+
+- `AuthServicing`
+- `ChatServicing`
+
+### Production Services
+
+- `AuthService`
+- `ChatService`
+
+### Test Services
+
+- `MockAuthService`
+- `MockChatService`
+
+This improves testability, maintainability, and separation of concerns.
+
+---
+
+## 🔥 Firebase Integration
+
+The application uses Firebase for:
+
+### Authentication
+
+- User registration
+- User login
+- User logout
+
+### Cloud Firestore
+
+- Real-time message storage
+- Real-time message updates
+- User profile data
+- Sender name support
+
+---
+
+## 🔄 App Flow
+
+```text
+Welcome Screen
+      ↓
 Login / Register
-        ↓
-   Authentication
-        ↓
-   Chat Screen
-        ↓
-Send / Receive Messages (Realtime)
+      ↓
+Firebase Authentication
+      ↓
+Chat Screen
+      ↓
+Send / Receive Messages in Real Time
 ```
-⸻
 
-⚙️ Technical Highlights
+---
 
-* Real-time updates using Firestore listeners
-* Asynchronous data handling via closures
-* Clean separation of layers (MVVM)
-* Safe UI updates on main thread
-* Dynamic UITableView with reusable cells
-* Keyboard-aware layout using constraints
-* Custom avatar generation without backend images
+## ⚙️ Technical Highlights
 
-⸻
+- Real-time updates using Firestore listeners
+- Asynchronous data handling via closures
+- Clean separation of layers with MVVM
+- Safe UI updates on the main thread
+- Dynamic UITableView with reusable cells
+- Keyboard-aware layout using constraints
+- Custom avatar generation without backend images
+- Protocol-based Dependency Injection
+- Unit testing with mock services
 
-🧪 Challenges & Solutions
+---
 
-Real-time UI synchronization
+## 🧪 Challenges & Solutions
 
-Challenge: Avoid UI glitches during updates
-Solution:
+### Real-time UI Synchronization
 
-* Firestore listener
-* Safe reload + scroll logic
+**Challenge:** Avoid UI glitches during message updates.
 
-⸻
+**Solution:**
 
-Auto-scroll stability
+- Firestore listener
+- Safe reload logic
+- Scroll-to-bottom handling after updates
 
-Challenge: Crashes when scrolling after reload
-Solution:
+### Auto-scroll Stability
 
-* Section/row validation
-* Delayed scroll via DispatchQueue.main.async
+**Challenge:** Avoid crashes when scrolling after table reloads.
 
-⸻
+**Solution:**
 
-Keyboard handling
+- Section and row validation
+- Delayed scrolling with `DispatchQueue.main.async`
 
-Challenge: Keyboard overlapping input field
-Solution:
+### Keyboard Handling
 
-* Observed keyboard notifications
-* Adjusted bottom constraint dynamically
+**Challenge:** Prevent the keyboard from overlapping the input field.
 
-⸻
+**Solution:**
 
-Avatar generation
+- Observed keyboard notifications
+- Adjusted bottom constraint dynamically
 
-Challenge: No stored profile images
-Solution:
+### Avatar Generation
 
-* Generated avatars from initials (CoreGraphics)
+**Challenge:** Display user identity without stored profile images.
 
-⸻
+**Solution:**
 
-📌 Current Status
+- Generated avatars from username initials
+
+---
+
+## 📌 Current Status
 
 ✅ MVP Completed
 
 Implemented:
 
-* Firebase Auth (Login / Register)
-* Firestore real-time messaging
-* Chat UI with custom cells
-* Attachment menu (UI)
-* Keyboard handling + auto-scroll
+- Firebase Authentication: Login / Register / Logout
+- Firestore real-time messaging
+- Chat UI with custom cells
+- Attachment menu UI
+- Keyboard handling
+- Auto-scroll
+- MVVM architecture
+- Dependency Injection
+- Unit tests with mock services
 
-⸻
+---
 
-🔮 Future Improvements
+## 📂 Project Structure
 
-* ✔ Read receipts (✓ / ✓✓)
-* 🖼 Media upload (Firebase Storage)
-* 👥 Group chats
-* 🟢 Online/offline status
-* 🔔 Push notifications
+```text
+FlashChatIOS
+├── Models
+├── Services
+├── ViewModels
+├── ViewControllers
+├── Views
+├── SupportingFiles
+├── FlashChatIOSTests
+├── Assets
+└── Screenshots
+```
 
-⸻
+---
 
-🛠 Tech Stack
+## ⚙️ Setup
 
-* Swift
-* UIKit
-* Firebase Auth
-* Firebase Firestore
-* MVVM Architecture
-* Auto Layout
-* UITableView
+Clone the repository:
 
-⸻
-
-🔧 Setup
+```bash
 git clone https://github.com/swiftio116/flashchat-ios.git
 cd flashchat-ios
-pod install
+```
 
-Open .xcworkspace
+Open the project:
 
-Add your Firebase config:
+```bash
+open FlashChatIOS.xcodeproj
+```
 
-* Replace GoogleService-Info.plist
+Add your Firebase configuration file:
 
-Run 🚀
+```text
+GoogleService-Info.plist
+```
 
-⸻
+Run the project in Xcode.
 
-🎯 My Contribution
+---
 
-* Designed chat UI and message cell layout
-* Refactored project to MVVM architecture
-* Implemented Firestore real-time listener
-* Built keyboard-aware input system
-* Added attachment menu (camera, gallery, files, location)
-* Implemented auto-scroll and smooth UX behavior
+## 📚 What I Learned
 
-⸻
+- Working with Firebase Authentication
+- Working with Cloud Firestore real-time updates
+- Applying MVVM architecture in UIKit
+- Using Dependency Injection through protocols
+- Writing unit tests with mock services
+- Separating ViewController logic from business logic
+- Building reusable custom UITableView cells
+- Handling keyboard-driven layout changes
+- Managing Git and GitHub workflow
 
-👤 Author
+---
 
-Aiaz
+## 🎯 My Contribution
 
-* GitHub: https://github.com/swiftio116
-* LinkedIn: https://www.linkedin.com/in/aiaz-muzafarov-546a4a288
+- Designed chat UI and message cell layout
+- Refactored the project to MVVM architecture
+- Implemented Firestore real-time listener
+- Built keyboard-aware input system
+- Added attachment menu UI
+- Implemented auto-scroll and smooth UX behavior
+- Added Dependency Injection for Auth and Chat services
+- Added unit tests for Login, Register, and Chat ViewModels
+
+---
+
+## 📌 Future Improvements
+
+- ✔ Read receipts
+- 🖼 Media upload with Firebase Storage
+- 👥 Group chats
+- 🟢 Online / offline status
+- 🔔 Push notifications
+- 📎 Image sharing
+- 📱 SwiftUI migration
+
+---
+
+## 👨‍💻 Author
+
+**Aiaz Muzafarov**
+
+- GitHub: [swiftio116](https://github.com/swiftio116)
+- LinkedIn: [Aiaz Muzafarov](https://www.linkedin.com/in/aiaz-muzafarov-546a4a288)
