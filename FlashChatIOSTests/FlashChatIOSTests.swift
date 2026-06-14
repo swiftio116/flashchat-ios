@@ -1,4 +1,5 @@
 import Testing
+import Foundation
 @testable import Flash_Chat_IOS
 struct FlashChatIOSTests {
     
@@ -99,5 +100,86 @@ struct FlashChatIOSTests {
         viewModel.register(name: "Aiaz", email: "test@mail.com", password: "")
         
         #expect(receivedError == "Enter password")
+    }
+    @Test
+    @MainActor
+    func startListeningUpdatesMessagesCount() async {
+        let mockAuthService = MockAuthService()
+        let mockChatService = MockChatService()
+        
+        mockChatService.messagesResult = .success([
+            Message(sender: "user1@mail.com", senderName: "User 1", body: "Hello", date: Date()),
+            Message(sender: "user2@mail.com", senderName: "User 2", body: "Hi", date: Date())
+        ])
+        
+        let viewModel = ChatViewModel(
+            authService: mockAuthService,
+            chatService: mockChatService
+        )
+        
+        viewModel.startListening()
+        
+        await Task.yield()
+        
+        #expect(viewModel.messagesCount == 2)
+    }
+
+    @Test
+    func isCurrentUserMessageReturnsTrueForCurrentUser() {
+        let mockAuthService = MockAuthService()
+        let mockChatService = MockChatService()
+        
+        mockAuthService.currentUserEmail = "user@mail.com"
+        
+        let viewModel = ChatViewModel(
+            authService: mockAuthService,
+            chatService: mockChatService
+        )
+        
+        let message = Message(
+            sender: "user@mail.com",
+            senderName: "Aiaz",
+            body: "Hello",
+            date: Date()
+        )
+        
+        #expect(viewModel.isCurrentUserMessage(message) == true)
+    }
+
+    @Test
+    func isCurrentUserMessageReturnsFalseForAnotherUser() {
+        let mockAuthService = MockAuthService()
+        let mockChatService = MockChatService()
+        
+        mockAuthService.currentUserEmail = "user@mail.com"
+        
+        let viewModel = ChatViewModel(
+            authService: mockAuthService,
+            chatService: mockChatService
+        )
+        
+        let message = Message(
+            sender: "another@mail.com",
+            senderName: "Another User",
+            body: "Hello",
+            date: Date()
+        )
+        
+        #expect(viewModel.isCurrentUserMessage(message) == false)
+    }
+
+    @Test
+    func sendEmptyMessageDoesNotCallChatService() {
+        let mockAuthService = MockAuthService()
+        let mockChatService = MockChatService()
+        
+        let viewModel = ChatViewModel(
+            authService: mockAuthService,
+            chatService: mockChatService
+        )
+        
+        viewModel.sendMessage(text: "   ")
+        
+        #expect(mockChatService.didCallSendMessage == false)
     }
 }
