@@ -10,9 +10,8 @@ final class ChatViewController: UIViewController, PHPickerViewControllerDelegate
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var attachButton: UIButton!
     
-    private let viewModel = ChatViewModel()
+    private let viewModel = DependencyContainer.shared.makeChatViewModel()
     private let locationManager = CLLocationManager()
-    
     private let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"

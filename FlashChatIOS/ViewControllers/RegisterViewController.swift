@@ -6,8 +6,7 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
 
-    private let viewModel = RegisterViewModel()
-
+    private let viewModel = DependencyContainer.shared.makeRegisterViewModel()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
