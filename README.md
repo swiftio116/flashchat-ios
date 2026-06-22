@@ -1,8 +1,8 @@
 # 🚀 FlashChat iOS
 
-A production-style real-time chat application built with **Swift**, **UIKit**, **Firebase**, **MVVM architecture**, and **Dependency Injection**.
+A real-time iOS chat application built with **Swift**, **UIKit**, **Firebase**, **MVVM architecture**, **Dependency Injection**, and **Unit Testing**.
 
-The project demonstrates real-time messaging, Firebase Authentication, Cloud Firestore integration, protocol-based service abstraction, testable ViewModels, and unit testing with mock services.
+The project demonstrates real-time messaging, Firebase Authentication, Cloud Firestore integration, protocol-based service abstraction, testable ViewModels, code documentation, and unit testing with mock services.
 
 ---
 
@@ -19,7 +19,7 @@ The project demonstrates real-time messaging, Firebase Authentication, Cloud Fir
 - 🔐 Authentication: login and registration via Firebase Auth
 - 💬 Real-time messaging with Cloud Firestore listener
 - 🧠 MVVM architecture
-- 🔌 Dependency Injection using protocols
+- 🔌 Dependency Injection using protocols and `DependencyContainer`
 - 🧪 Unit testing with mock services
 - 🖼 Custom message cells for incoming and outgoing messages
 - 👤 Avatar generation based on username initials
@@ -28,7 +28,7 @@ The project demonstrates real-time messaging, Firebase Authentication, Cloud Fir
 - ⌨️ Smooth keyboard handling with constraints
 - 📱 UIKit-based responsive interface
 
-### 📎 Attachments
+### 📎 Attachments UI
 
 - 📷 Camera
 - 🖼 Photo Library
@@ -63,14 +63,14 @@ The project demonstrates real-time messaging, Firebase Authentication, Cloud Fir
 
 ## 🛠 Tech Stack
 
-- Swift
-- UIKit
-- Firebase Authentication
-- Cloud Firestore
+- [Swift](https://www.swift.org/)
+- [UIKit](https://developer.apple.com/documentation/uikit)
+- [Firebase Authentication](https://firebase.google.com/docs/auth)
+- [Cloud Firestore](https://firebase.google.com/docs/firestore)
 - Swift Package Manager
 - MVVM Architecture
 - Dependency Injection
-- Swift Testing
+- Unit Testing
 - Auto Layout
 - UITableView
 - Git & GitHub
@@ -79,7 +79,7 @@ The project demonstrates real-time messaging, Firebase Authentication, Cloud Fir
 
 ## 🧪 Testing
 
-The project includes **10 unit tests** for ViewModels and business logic.
+The project includes **10 Unit Tests** for ViewModels and business logic.
 
 ### LoginViewModel Tests
 
@@ -120,9 +120,13 @@ The project follows **MVVM (Model-View-ViewModel)**.
 ```text
 ViewController
       ↓
+DependencyContainer
+      ↓
 ViewModel
       ↓
-Services
+Service Protocols
+      ↓
+Firebase Services
       ↓
 Firebase
 ```
@@ -130,31 +134,42 @@ Firebase
 ### Architecture Diagram
 
 ```text
-┌───────────────┐
-│ ViewController│
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│   ViewModel   │
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│   Services    │
-│ Auth / Chat   │
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│   Firebase    │
-│ Auth + DB     │
-└───────────────┘
+┌───────────────────┐
+│  ViewController   │
+└─────────┬─────────┘
+          ↓
+┌───────────────────┐
+│DependencyContainer│
+└─────────┬─────────┘
+          ↓
+┌───────────────────┐
+│     ViewModel     │
+└─────────┬─────────┘
+          ↓
+┌───────────────────┐
+│ Service Protocols │
+│ Auth / Chat       │
+└─────────┬─────────┘
+          ↓
+┌───────────────────┐
+│ Firebase Services │
+│ AuthService       │
+│ ChatService       │
+└─────────┬─────────┘
+          ↓
+┌───────────────────┐
+│     Firebase      │
+│ Auth + Firestore  │
+└───────────────────┘
 ```
 
 ### Why MVVM?
 
 - Separates UI from business logic
 - Improves testability
-- Makes the code scalable
+- Makes the code easier to scale
 - Reduces ViewController complexity
+- Keeps Firebase logic outside ViewControllers
 
 ### ViewControllers
 
@@ -173,7 +188,7 @@ Responsible for:
 - Presentation logic
 - Authentication flow
 - Chat logic
-- Communication with services
+- Communication with service protocols
 
 ### Models
 
@@ -193,6 +208,22 @@ Responsible for Firebase communication:
 ## 🔌 Dependency Injection
 
 Services are injected into ViewModels through protocols.
+
+### Dependency Container
+
+`DependencyContainer` builds app dependencies in one place and provides configured ViewModels to ViewControllers.
+
+```swift
+final class DependencyContainer {
+    static let shared = DependencyContainer()
+
+    func makeLoginViewModel() -> LoginViewModel
+    func makeRegisterViewModel() -> RegisterViewModel
+    func makeChatViewModel() -> ChatViewModel
+}
+```
+
+This prevents ViewModels from creating concrete Firebase services directly.
 
 ### Protocols
 
@@ -232,6 +263,27 @@ The application uses Firebase for:
 
 ---
 
+## 🔐 Firebase Configuration
+
+The real `GoogleService-Info.plist` file is not committed to the repository.
+
+The repository includes a safe template:
+
+```text
+FlashChatIOS/GoogleService-Info.example.plist
+```
+
+To run the project locally:
+
+1. Create a Firebase project
+2. Download your own `GoogleService-Info.plist`
+3. Add it to the `FlashChatIOS` folder
+4. Make sure the file is included in the app target
+
+The real Firebase config file is ignored by Git.
+
+---
+
 ## 🔄 App Flow
 
 ```text
@@ -258,7 +310,9 @@ Send / Receive Messages in Real Time
 - Keyboard-aware layout using constraints
 - Custom avatar generation without backend images
 - Protocol-based Dependency Injection
+- Centralized dependency creation with `DependencyContainer`
 - Unit testing with mock services
+- Concise code documentation for key architecture components
 
 ---
 
@@ -292,13 +346,16 @@ Send / Receive Messages in Real Time
 - Observed keyboard notifications
 - Adjusted bottom constraint dynamically
 
-### Avatar Generation
+### Firebase Dependency Isolation
 
-**Challenge:** Display user identity without stored profile images.
+**Challenge:** Keep Firebase-specific logic outside ViewModels and make ViewModels testable.
 
 **Solution:**
 
-- Generated avatars from username initials
+- Added service protocols
+- Injected services into ViewModels
+- Added `DependencyContainer`
+- Used mock services in unit tests
 
 ---
 
@@ -315,8 +372,10 @@ Implemented:
 - Keyboard handling
 - Auto-scroll
 - MVVM architecture
-- Dependency Injection
+- Dependency Injection with `DependencyContainer`
 - Unit tests with mock services
+- Safe Firebase config handling
+- Concise code documentation
 
 ---
 
@@ -324,6 +383,7 @@ Implemented:
 
 ```text
 FlashChatIOS
+├── DI
 ├── Models
 ├── Services
 ├── ViewModels
@@ -355,7 +415,13 @@ open FlashChatIOS.xcodeproj
 Add your Firebase configuration file:
 
 ```text
-GoogleService-Info.plist
+FlashChatIOS/GoogleService-Info.plist
+```
+
+You can use the example file as a reference:
+
+```text
+FlashChatIOS/GoogleService-Info.example.plist
 ```
 
 Run the project in Xcode.
@@ -368,11 +434,14 @@ Run the project in Xcode.
 - Working with Cloud Firestore real-time updates
 - Applying MVVM architecture in UIKit
 - Using Dependency Injection through protocols
+- Creating a simple dependency container
 - Writing unit tests with mock services
 - Separating ViewController logic from business logic
+- Documenting key Swift components with concise code comments
 - Building reusable custom UITableView cells
 - Handling keyboard-driven layout changes
 - Managing Git and GitHub workflow
+- Keeping sensitive configuration files out of the repository
 
 ---
 
@@ -385,7 +454,11 @@ Run the project in Xcode.
 - Added attachment menu UI
 - Implemented auto-scroll and smooth UX behavior
 - Added Dependency Injection for Auth and Chat services
+- Added `DependencyContainer` for centralized dependency creation
 - Added unit tests for Login, Register, and Chat ViewModels
+- Removed real Firebase config from the repository
+- Added safe Firebase config example file
+- Added concise code documentation for key components
 
 ---
 
@@ -407,3 +480,4 @@ Run the project in Xcode.
 
 - GitHub: [swiftio116](https://github.com/swiftio116)
 - LinkedIn: [Aiaz Muzafarov](https://www.linkedin.com/in/aiaz-muzafarov-546a4a288)
+````
