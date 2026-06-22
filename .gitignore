@@ -5,3 +5,6 @@ xcuserdata/
 DerivedData/
 build/
 Pods/
+# Firebase
+GoogleService-Info.plist
+**/GoogleService-Info.plist
