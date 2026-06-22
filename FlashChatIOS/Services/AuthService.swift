@@ -2,6 +2,9 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 
+/// Firebase-based implementation of `AuthServicing`.
+///
+/// Handles user registration, login, logout and loading current user data.
 final class AuthService {
     private let auth = Auth.auth()
     private let db = Firestore.firestore()

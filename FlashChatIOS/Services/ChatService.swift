@@ -1,6 +1,9 @@
 import Foundation
 import FirebaseFirestore
 
+/// Firestore-based implementation of `ChatServicing`.
+///
+/// Handles message listening, sending and listener cleanup.
 final class ChatService {
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?

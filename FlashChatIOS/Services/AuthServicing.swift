@@ -1,5 +1,9 @@
 import Foundation
 
+/// Describes authentication actions used by the app.
+///
+/// ViewModels depend on this protocol instead of FirebaseAuth directly,
+/// which makes authentication logic easier to test with mocks.
 protocol AuthServicing {
     var currentUserEmail: String? { get }
     var currentUserName: String? { get }
