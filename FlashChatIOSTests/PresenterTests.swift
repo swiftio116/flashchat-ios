@@ -6,8 +6,8 @@ final class PresenterTests: XCTestCase {
     func testLoginShowsErrorWhenEmailIsEmpty() {
         let view = LoginViewSpy()
         let presenter = LoginPresenter(
-            authService: AuthServiceMock(),
-            coordinator: CoordinatorMock()
+            authService: TestAuthService(),
+            coordinator: TestCoordinator()
         )
 
         presenter.view = view
@@ -19,8 +19,8 @@ final class PresenterTests: XCTestCase {
     func testLoginShowsErrorWhenPasswordIsEmpty() {
         let view = LoginViewSpy()
         let presenter = LoginPresenter(
-            authService: AuthServiceMock(),
-            coordinator: CoordinatorMock()
+            authService: TestAuthService(),
+            coordinator: TestCoordinator()
         )
 
         presenter.view = view
@@ -31,8 +31,8 @@ final class PresenterTests: XCTestCase {
 
     func testLoginSuccessOpensChat() {
         let view = LoginViewSpy()
-        let coordinator = CoordinatorMock()
-        let authService = AuthServiceMock()
+        let coordinator = TestCoordinator()
+        let authService = TestAuthService()
 
         let presenter = LoginPresenter(
             authService: authService,
@@ -58,8 +58,8 @@ final class PresenterTests: XCTestCase {
     func testRegisterShowsErrorWhenPasswordIsEmpty() {
         let view = RegisterViewSpy()
         let presenter = RegisterPresenter(
-            authService: AuthServiceMock(),
-            coordinator: CoordinatorMock()
+            authService: TestAuthService(),
+            coordinator: TestCoordinator()
         )
 
         presenter.view = view
@@ -70,18 +70,63 @@ final class PresenterTests: XCTestCase {
 
     func testChatDoesNotSendEmptyMessage() {
         let view = ChatViewSpy()
-        let chatService = ChatServiceMock()
+        let chatService = TestChatService()
 
         let presenter = ChatPresenter(
             chatService: chatService,
-            authService: AuthServiceMock(),
-            coordinator: CoordinatorMock()
+            authService: TestAuthService(),
+            coordinator: TestCoordinator()
         )
 
         presenter.view = view
         presenter.didTapSend(text: "   ")
 
         XCTAssertFalse(chatService.didSendMessage)
+    }
+
+    func testChatClearsInputAfterSuccessfulSend() {
+        let view = ChatViewSpy()
+        let chatService = TestChatService()
+        let authService = TestAuthService()
+
+        authService.currentUserEmail = "test@mail.com"
+        authService.currentUserName = "Test User"
+
+        let presenter = ChatPresenter(
+            chatService: chatService,
+            authService: authService,
+            coordinator: TestCoordinator()
+        )
+
+        let expectation = expectation(description: "Message sent")
+
+        view.onClearInput = {
+            expectation.fulfill()
+        }
+
+        presenter.view = view
+        presenter.didTapSend(text: "Hello")
+
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertTrue(chatService.didSendMessage)
+        XCTAssertTrue(view.didClearInput)
+    }
+
+    func testChatLogoutCallsCoordinator() {
+        let view = ChatViewSpy()
+        let coordinator = TestCoordinator()
+
+        let presenter = ChatPresenter(
+            chatService: TestChatService(),
+            authService: TestAuthService(),
+            coordinator: coordinator
+        )
+
+        presenter.view = view
+        presenter.didTapLogout()
+
+        XCTAssertTrue(coordinator.didLogout)
     }
 }
 
@@ -118,6 +163,7 @@ private final class ChatViewSpy: ChatViewProtocol {
 
     var errorMessage: String?
     var didClearInput = false
+    var onClearInput: (() -> Void)?
 
     func showMessages(_ messages: [Message], currentUserEmail: String?) {}
 
@@ -127,12 +173,13 @@ private final class ChatViewSpy: ChatViewProtocol {
 
     func clearInput() {
         didClearInput = true
+        onClearInput?()
     }
 }
 
-// MARK: - Mocks
+// MARK: - Test Doubles
 
-private final class CoordinatorMock: AppCoordinating {
+private final class TestCoordinator: AppCoordinating {
 
     var didShowLogin = false
     var didShowRegister = false
@@ -156,11 +203,15 @@ private final class CoordinatorMock: AppCoordinating {
     }
 }
 
-private final class AuthServiceMock: AuthServicing {
+private final class TestAuthService: AuthServicing {
 
     var currentUserEmail: String? = "test@mail.com"
     var currentUserName: String? = "Test User"
     var currentUserID: String? = "123"
+
+    var loginResult: Result<Void, Error> = .success(())
+    var registerResult: Result<Void, Error> = .success(())
+    var shouldFailLogout = false
 
     func registerUser(
         name: String,
@@ -168,7 +219,7 @@ private final class AuthServiceMock: AuthServicing {
         password: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        completion(.success(()))
+        completion(registerResult)
     }
 
     func fetchCurrentUserName(completion: @escaping (String?) -> Void) {
@@ -180,21 +231,35 @@ private final class AuthServiceMock: AuthServicing {
         password: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        completion(.success(()))
+        completion(loginResult)
     }
 
-    func logout() throws {}
+    func logout() throws {
+        if shouldFailLogout {
+            throw NSError(
+                domain: "TestAuthService",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "Logout failed"]
+            )
+        }
+    }
 }
 
-private final class ChatServiceMock: ChatServicing {
+private final class TestChatService: ChatServicing {
 
     var didSendMessage = false
+    var didStartListening = false
+    var didStopListening = false
 
     func startListening(
         completion: @escaping (Result<[Message], Error>) -> Void
-    ) {}
+    ) {
+        didStartListening = true
+    }
 
-    func stopListening() {}
+    func stopListening() {
+        didStopListening = true
+    }
 
     func sendMessage(
         sender: String,
