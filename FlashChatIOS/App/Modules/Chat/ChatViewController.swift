@@ -3,14 +3,23 @@ import UIKit
 final class ChatViewController: UIViewController {
 
     private let presenter: ChatPresenter
+
     private var messages: [Message] = []
+    private var currentUserEmail: String?
 
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MessageCell")
+        tableView.register(MessageCell.self, forCellReuseIdentifier: MessageCell.identifier)
         tableView.separatorStyle = .none
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
+    }()
+
+    private let inputContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .secondarySystemBackground
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     private let messageTextField: UITextField = {
@@ -28,13 +37,6 @@ final class ChatViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         return button
-    }()
-
-    private let inputContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .secondarySystemBackground
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
     }()
 
     init(presenter: ChatPresenter) {
@@ -60,7 +62,7 @@ final class ChatViewController: UIViewController {
         presenter.viewDidDisappear()
     }
 
-    // Basic screen layout.
+    // Main screen layout.
     private func setupUI() {
         view.backgroundColor = .systemBackground
 
@@ -95,7 +97,7 @@ final class ChatViewController: UIViewController {
         ])
     }
 
-    // Navigation bar buttons.
+    // Navigation bar setup.
     private func setupNavigation() {
         title = "FlashChat"
 
@@ -123,7 +125,7 @@ final class ChatViewController: UIViewController {
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
 
-    // Simple error alert.
+    // Shows simple error alert.
     private func showAlert(message: String) {
         let alert = UIAlertController(
             title: "Error",
@@ -138,8 +140,10 @@ final class ChatViewController: UIViewController {
 
 extension ChatViewController: ChatViewProtocol {
 
-    func showMessages(_ messages: [Message]) {
+    func showMessages(_ messages: [Message], currentUserEmail: String?) {
         self.messages = messages
+        self.currentUserEmail = currentUserEmail
+
         tableView.reloadData()
         scrollToBottom()
     }
@@ -167,14 +171,15 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: "MessageCell",
+            withIdentifier: MessageCell.identifier,
             for: indexPath
-        )
+        ) as? MessageCell
 
         let message = messages[indexPath.row]
-        cell.textLabel?.text = message.body
-        cell.selectionStyle = .none
+        let isOwnMessage = message.sender == currentUserEmail
 
-        return cell
+        cell?.configure(with: message, isOwnMessage: isOwnMessage)
+
+        return cell ?? UITableViewCell()
     }
 }

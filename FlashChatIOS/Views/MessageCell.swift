@@ -1,112 +1,96 @@
 import UIKit
 
 final class MessageCell: UITableViewCell {
-    
-    @IBOutlet weak var leftImageView: UIImageView!
-    @IBOutlet weak var rightImageView: UIImageView!
-    @IBOutlet weak var messageBubble: UIView!
-    
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var messageLabel: UILabel!
-    @IBOutlet weak var timeLabel: UILabel!
-    
-    @IBOutlet weak var leadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var trailingConstraint: NSLayoutConstraint!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
+
+    static let identifier = "MessageCell"
+
+    private var leftConstraint: NSLayoutConstraint?
+    private var rightConstraint: NSLayoutConstraint?
+
+    private let bubbleView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 14
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private let senderLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = .secondaryLabel
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let messageLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        leftImageView.layer.cornerRadius = leftImageView.bounds.height / 2
-        rightImageView.layer.cornerRadius = rightImageView.bounds.height / 2
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("Use init(style:reuseIdentifier:)")
     }
-    
-    
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        leftConstraint?.isActive = false
+        rightConstraint?.isActive = false
+    }
+
+    // Cell layout.
     private func setupUI() {
         selectionStyle = .none
         backgroundColor = .clear
-        contentView.backgroundColor = .clear
-        
-        messageBubble.layer.cornerRadius = 18
-        messageBubble.clipsToBounds = true
-        
-        leftImageView.clipsToBounds = true
-        rightImageView.clipsToBounds = true
-        
-        nameLabel.font = .systemFont(ofSize: 12, weight: .semibold)
-        nameLabel.textColor = .darkGray
-        
-        messageLabel.font = .systemFont(ofSize: 17)
-        messageLabel.numberOfLines = 0
-        
-        timeLabel.font = .systemFont(ofSize: 11)
+
+        contentView.addSubview(bubbleView)
+        bubbleView.addSubview(senderLabel)
+        bubbleView.addSubview(messageLabel)
+
+        leftConstraint = bubbleView.leadingAnchor.constraint(
+            equalTo: contentView.leadingAnchor,
+            constant: 16
+        )
+
+        rightConstraint = bubbleView.trailingAnchor.constraint(
+            equalTo: contentView.trailingAnchor,
+            constant: -16
+        )
+
+        NSLayoutConstraint.activate([
+            bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
+            bubbleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6),
+            bubbleView.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: 0.75),
+
+            senderLabel.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 8),
+            senderLabel.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 12),
+            senderLabel.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -12),
+
+            messageLabel.topAnchor.constraint(equalTo: senderLabel.bottomAnchor, constant: 4),
+            messageLabel.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 12),
+            messageLabel.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -12),
+            messageLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -10)
+        ])
     }
-    
-    func configure(with message: Message, isCurrentUser: Bool, formatter: DateFormatter) {
-        nameLabel.text = message.senderName
+
+    func configure(with message: Message, isOwnMessage: Bool) {
+        senderLabel.text = message.senderName
         messageLabel.text = message.body
-        timeLabel.text = formatter.string(from: message.date)
-        if isCurrentUser {
-            leftImageView.isHidden = true
-            rightImageView.isHidden = false
-            nameLabel.isHidden = true
 
-            messageBubble.backgroundColor = .systemBlue
-            messageLabel.textColor = .white
-            timeLabel.textColor = UIColor .black.withAlphaComponent(0.75)
+        leftConstraint?.isActive = !isOwnMessage
+        rightConstraint?.isActive = isOwnMessage
 
-            leadingConstraint.constant = 80
-            trailingConstraint.constant = 56
-
-            rightImageView.image = avatarImage(letter: firstLetter(from: message.senderName))
-        } else {
-            leftImageView.isHidden = false
-            rightImageView.isHidden = true
-            nameLabel.isHidden = false
-
-            messageBubble.backgroundColor = .systemGray5
-            messageLabel.textColor = .black
-            timeLabel.textColor = .darkGray
-            nameLabel.textColor = .darkGray
-
-            leadingConstraint.constant = 56
-            trailingConstraint.constant = 80
-
-            leftImageView.image = avatarImage(letter: firstLetter(from: message.senderName))
-        }
-        layoutIfNeeded()
-    }
-    
-    private func firstLetter(from name: String) -> String {
-        String(name.trimmingCharacters(in: .whitespacesAndNewlines).prefix(1)).uppercased()
-    }
-    
-    private func avatarImage(letter: String) -> UIImage? {
-        let size = CGSize(width: 40, height: 40)
-        let renderer = UIGraphicsImageRenderer(size: size)
-        
-        return renderer.image { _ in
-            let rect = CGRect(origin: .zero, size: size)
-            UIColor.systemBlue.withAlphaComponent(0.15).setFill()
-            UIBezierPath(ovalIn: rect).fill()
-            
-            let attrs: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: 18, weight: .semibold),
-                .foregroundColor: UIColor.systemBlue
-            ]
-            
-            let textSize = letter.size(withAttributes: attrs)
-            let textRect = CGRect(
-                x: (size.width - textSize.width) / 2,
-                y: (size.height - textSize.height) / 2,
-                width: textSize.width,
-                height: textSize.height
-            )
-            
-            letter.draw(in: textRect, withAttributes: attrs)
-        }
+        bubbleView.backgroundColor = isOwnMessage ? .systemBlue : .secondarySystemBackground
+        messageLabel.textColor = isOwnMessage ? .white : .label
+        senderLabel.textColor = isOwnMessage ? .white.withAlphaComponent(0.8) : .secondaryLabel
     }
 }

@@ -8,8 +8,6 @@ final class ChatPresenter {
     private let authService: AuthServicing
     private weak var coordinator: AppCoordinator?
 
-    private var messages: [Message] = []
-
     init(
         chatService: ChatServicing,
         authService: AuthServicing,
@@ -20,14 +18,16 @@ final class ChatPresenter {
         self.coordinator = coordinator
     }
 
-    // Starts messages listener.
+    // Starts chat updates.
     func viewDidLoad() {
         chatService.startListening { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let messages):
-                    self?.messages = messages
-                    self?.view?.showMessages(messages)
+                    self?.view?.showMessages(
+                        messages,
+                        currentUserEmail: self?.authService.currentUserEmail
+                    )
 
                 case .failure(let error):
                     self?.view?.showError(error.localizedDescription)
@@ -36,7 +36,7 @@ final class ChatPresenter {
         }
     }
 
-    // Stops messages listener.
+    // Stops chat updates.
     func viewDidDisappear() {
         chatService.stopListening()
     }
