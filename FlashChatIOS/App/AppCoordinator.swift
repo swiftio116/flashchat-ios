@@ -2,17 +2,15 @@ import UIKit
 
 final class AppCoordinator {
 
-    // Main app window.
     private let window: UIWindow
-
-    // Handles navigation between screens.
     private let navigationController = UINavigationController()
+
+    private let authService: AuthServicing = AuthService()
 
     init(window: UIWindow) {
         self.window = window
     }
 
-    // Starts the app flow.
     func start() {
         showWelcome()
 
@@ -25,23 +23,38 @@ final class AppCoordinator {
         let viewController = WelcomeViewController(presenter: presenter)
 
         presenter.view = viewController
-
         navigationController.setViewControllers([viewController], animated: false)
     }
 
     func showLogin() {
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .systemBlue
-        viewController.title = "Login"
+        let presenter = LoginPresenter(
+            authService: authService,
+            coordinator: self
+        )
+
+        let viewController = LoginViewController(presenter: presenter)
+        presenter.view = viewController
 
         navigationController.pushViewController(viewController, animated: true)
     }
 
     func showRegister() {
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .systemTeal
-        viewController.title = "Register"
+        let presenter = RegisterPresenter(
+            authService: authService,
+            coordinator: self
+        )
+
+        let viewController = RegisterViewController(presenter: presenter)
+        presenter.view = viewController
 
         navigationController.pushViewController(viewController, animated: true)
+    }
+
+    func showChat() {
+        let viewController = UIViewController()
+        viewController.view.backgroundColor = .systemBackground
+        viewController.title = "Chat"
+
+        navigationController.setViewControllers([viewController], animated: true)
     }
 }

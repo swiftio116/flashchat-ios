@@ -1,86 +1,131 @@
 import UIKit
 
-class RegisterViewController: UIViewController {
+final class RegisterViewController: UIViewController {
 
-    @IBOutlet weak var nameTextField: UITextField!
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
+    private let presenter: RegisterPresenter
 
-    private let viewModel = DependencyContainer.shared.makeRegisterViewModel()
+    // Email input field.
+    private let emailTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Email"
+        textField.borderStyle = .roundedRect
+        textField.keyboardType = .emailAddress
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+
+    // Password input field.
+    private let passwordTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Password"
+        textField.borderStyle = .roundedRect
+        textField.isSecureTextEntry = true
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+
+    // Register action button.
+    private lazy var registerButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Register", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
+        button.backgroundColor = .systemTeal
+        button.tintColor = .white
+        button.layer.cornerRadius = 12
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
+    // Shows loading state.
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+
+    init(presenter: RegisterPresenter) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("Use init(presenter:)")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        bindViewModel()
     }
 
+    // Sets up views and layout.
     private func setupUI() {
-        nameTextField.text = ""
-        emailTextField.text = ""
-        passwordTextField.text = ""
+        view.backgroundColor = .systemBackground
+        title = "Register"
 
-        nameTextField.attributedPlaceholder = NSAttributedString(
-            string: "Name",
-            attributes: [.foregroundColor: UIColor.black.withAlphaComponent(0.5)]
-        )
+        view.addSubview(emailTextField)
+        view.addSubview(passwordTextField)
+        view.addSubview(registerButton)
+        view.addSubview(activityIndicator)
 
-        emailTextField.attributedPlaceholder = NSAttributedString(
-            string: "Email",
-            attributes: [.foregroundColor: UIColor.gray]
-        )
+        NSLayoutConstraint.activate([
+            emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            emailTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            emailTextField.heightAnchor.constraint(equalToConstant: 48),
 
-        passwordTextField.attributedPlaceholder = NSAttributedString(
-            string: "Password",
-            attributes: [.foregroundColor: UIColor.gray]
-        )
+            passwordTextField.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
+            passwordTextField.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
+            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 16),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 48),
 
-        nameTextField.isSecureTextEntry = false
-        emailTextField.isSecureTextEntry = false
-        passwordTextField.isSecureTextEntry = true
+            registerButton.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
+            registerButton.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
+            registerButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 24),
+            registerButton.heightAnchor.constraint(equalToConstant: 56),
 
-        [nameTextField, emailTextField, passwordTextField].forEach {
-            $0?.layer.cornerRadius = 20
-            $0?.clipsToBounds = true
-            $0?.backgroundColor = UIColor.white.withAlphaComponent(0.8)
-        }
-
-        nameTextField.setLeftPadding(16)
-        emailTextField.setLeftPadding(16)
-        passwordTextField.setLeftPadding(16)
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.topAnchor.constraint(equalTo: registerButton.bottomAnchor, constant: 24)
+        ])
     }
 
-    private func bindViewModel() {
-        viewModel.onSuccess = { [weak self] in
-            DispatchQueue.main.async {
-                self?.performSegue(withIdentifier: K.registerSegue, sender: self)
-            }
-        }
-
-        viewModel.onError = { [weak self] errorMessage in
-            DispatchQueue.main.async {
-                let alert = UIAlertController(
-                    title: "Error",
-                    message: errorMessage,
-                    preferredStyle: .alert
-                )
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
-                self?.present(alert, animated: true)
-            }
-        }
-    }
-
-    @IBAction func registerPressed(_ sender: UIButton) {
-        viewModel.register(
-            name: nameTextField.text,
+    @objc private func registerButtonTapped() {
+        presenter.didTapRegister(
             email: emailTextField.text,
             password: passwordTextField.text
         )
     }
+
+    // Shows simple error alert.
+    private func showAlert(message: String) {
+        let alert = UIAlertController(
+            title: "Error",
+            message: message,
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
 }
 
-extension UITextField {
-    func setLeftPadding(_ amount: CGFloat) {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: 1))
-        leftView = paddingView
-        leftViewMode = .always
+extension RegisterViewController: RegisterViewProtocol {
+
+    func setLoading(_ isLoading: Bool) {
+        registerButton.isEnabled = !isLoading
+
+        if isLoading {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+        }
+    }
+
+    func showError(_ message: String) {
+        showAlert(message: message)
     }
 }
