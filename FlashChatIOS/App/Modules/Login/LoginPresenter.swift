@@ -5,11 +5,14 @@ final class LoginPresenter {
     weak var view: LoginViewProtocol?
 
     private let authService: AuthServicing
-    private weak var coordinator: AppCoordinator?
+    private weak var coordinator: AppCoordinating?
 
-    init(authService: AuthServicing, coordinator: AppCoordinator) {
+    init(authService: AuthServicing, coordinator: AppCoordinating) {
+
         self.authService = authService
+
         self.coordinator = coordinator
+
     }
 
     func didTapLogin(email: String?, password: String?) {

@@ -5,9 +5,8 @@ final class RegisterPresenter {
     weak var view: RegisterViewProtocol?
 
     private let authService: AuthServicing
-    private weak var coordinator: AppCoordinator?
-
-    init(authService: AuthServicing, coordinator: AppCoordinator) {
+    private weak var coordinator: AppCoordinating?
+    init(authService: AuthServicing, coordinator: AppCoordinating) {
         self.authService = authService
         self.coordinator = coordinator
     }

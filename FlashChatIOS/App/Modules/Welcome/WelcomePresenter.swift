@@ -4,9 +4,8 @@ final class WelcomePresenter {
 
     weak var view: WelcomeViewProtocol?
 
-    private weak var coordinator: AppCoordinator?
-
-    init(coordinator: AppCoordinator) {
+    private weak var coordinator: AppCoordinating?
+    init(coordinator: AppCoordinating) {
         self.coordinator = coordinator
     }
 

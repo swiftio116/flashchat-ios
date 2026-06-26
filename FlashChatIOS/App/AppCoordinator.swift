@@ -1,7 +1,6 @@
 import UIKit
 
-final class AppCoordinator {
-
+final class AppCoordinator: AppCoordinating {
     private let window: UIWindow
     private let container: DependencyContainer
     private let navigationController = UINavigationController()

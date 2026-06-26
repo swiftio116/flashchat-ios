@@ -6,12 +6,11 @@ final class ChatPresenter {
 
     private let chatService: ChatServicing
     private let authService: AuthServicing
-    private weak var coordinator: AppCoordinator?
-
+    private weak var coordinator: AppCoordinating?
     init(
         chatService: ChatServicing,
         authService: AuthServicing,
-        coordinator: AppCoordinator
+        coordinator: AppCoordinating
     ) {
         self.chatService = chatService
         self.authService = authService
