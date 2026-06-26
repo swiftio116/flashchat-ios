@@ -3,12 +3,12 @@ import UIKit
 final class AppCoordinator {
 
     private let window: UIWindow
+    private let container: DependencyContainer
     private let navigationController = UINavigationController()
 
-    private let authService: AuthServicing = AuthService()
-
-    init(window: UIWindow) {
+    init(window: UIWindow, container: DependencyContainer) {
         self.window = window
+        self.container = container
     }
 
     func start() {
@@ -17,6 +17,8 @@ final class AppCoordinator {
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
     }
+
+    
 
     func showWelcome() {
         let presenter = WelcomePresenter(coordinator: self)
@@ -28,7 +30,7 @@ final class AppCoordinator {
 
     func showLogin() {
         let presenter = LoginPresenter(
-            authService: authService,
+            authService: container.authService,
             coordinator: self
         )
 
@@ -40,7 +42,7 @@ final class AppCoordinator {
 
     func showRegister() {
         let presenter = RegisterPresenter(
-            authService: authService,
+            authService: container.authService,
             coordinator: self
         )
 
@@ -49,12 +51,20 @@ final class AppCoordinator {
 
         navigationController.pushViewController(viewController, animated: true)
     }
-
     func showChat() {
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .systemBackground
-        viewController.title = "Chat"
+        let presenter = ChatPresenter(
+            chatService: container.chatService,
+            authService: container.authService,
+            coordinator: self
+        )
+
+        let viewController = ChatViewController(presenter: presenter)
+        presenter.view = viewController
 
         navigationController.setViewControllers([viewController], animated: true)
+    }
+    
+    func logout() {
+        showWelcome()
     }
 }
