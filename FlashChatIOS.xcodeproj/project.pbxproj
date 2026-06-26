@@ -289,9 +289,11 @@
 				DEVELOPMENT_TEAM = 59TZK82885;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FlashChatIOS/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow camera access to send photos";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow location access to send location in chat";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow access to photo library";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
@@ -325,9 +327,11 @@
 				DEVELOPMENT_TEAM = 59TZK82885;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FlashChatIOS/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow camera access to send photos";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow location access to send location in chat";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow access to photo library";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
