@@ -177,12 +177,25 @@ final class DependencyContainer {
 
 ## Testing
 
-The project contains test doubles for services:
+The project contains unit tests for presenters.
 
-- `MockAuthService`
-- `MockChatService`
+Current tests cover:
 
-These mocks can be used for testing presenters without Firebase.
+- empty email validation on login
+- empty password validation on login
+- successful login navigation to chat
+- empty password validation on registration
+- empty message validation in chat
+- clearing input after successful message sending
+- logout navigation from chat
+
+The project also uses test doubles for services:
+
+- `TestAuthService`
+- `TestChatService`
+- `TestCoordinator`
+
+This allows testing screen logic without calling Firebase directly.
 
 ## Firebase Setup
 
